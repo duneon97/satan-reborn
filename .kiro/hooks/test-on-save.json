@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run SATAN Reborn unit tests on Python save",
+      "description": "Run the complete standard-library-only test suite after saving a Python file.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.py$",
+      "action": {
+        "type": "command",
+        "command": "python -m unittest -v"
+      },
+      "timeout": 120
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Resurrect the haunted example report on save",
+      "description": "Scan the demo as text, never execute it. Expected findings (exit 1) count as hook success.",
+      "trigger": "PostFileSave",
+      "matcher": "(^|[/\\\\])(satan_reborn|examples[/\\\\]haunted_app)[/\\\\]",
+      "action": {
+        "type": "command",
+        "command": "python -c \"import sys; from satan_reborn.__main__ import main; code = main(['scan', 'examples/haunted_app', '--html', 'reports/haunted.html', '--json', 'reports/haunted.json']); sys.exit(0 if code in (0, 1) else code)\""
+      },
+      "timeout": 60
+    }
+  ]
+}

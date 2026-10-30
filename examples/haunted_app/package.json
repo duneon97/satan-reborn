@@ -1,0 +1,9 @@
+{
+  "name": "haunted-app-do-not-run",
+  "private": true,
+  "description": "Deliberately vulnerable manifest. Offline scan fixture only.",
+  "dependencies": {
+    "lodash": "4.17.15",
+    "minimist": "^1.2.0"
+  }
+}

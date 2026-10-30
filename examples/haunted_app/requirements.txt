@@ -1,0 +1,4 @@
+# DO NOT INSTALL. These are intentionally insecure scanner fixtures.
+Flask
+PyYAML>=5.1
+requests==2.19.1
