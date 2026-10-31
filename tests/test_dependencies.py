@@ -22,6 +22,20 @@ class DependencyTests(unittest.TestCase):
         deps = pinned_dependencies(Source("requirements-dev.txt", "My_Package.Name==1.0.0"))
         self.assertEqual(deps[0].name, "my-package-name")
 
+    def test_exact_pins_reject_trailing_constraints_but_allow_hashes_and_markers(self):
+        source = Source("requirements.txt", (
+            "fake-demo==1.0 , !=1.0\n"
+            "fake-demo==1.0 unexpected-text\n"
+            "fake-demo==1.0 --hash=sha256:FAKE\n"
+            "fake-other==2.0 ; python_version >= '3.10'\n"
+            "fake-third==3.0 \\\n"
+            "    --hash=sha256:FAKE\n"
+        ))
+        self.assertEqual([f.line for f in analyze(source)], [1, 2])
+        self.assertEqual([(d.name, d.version, d.line) for d in pinned_dependencies(source)],
+                         [("fake-demo", "1.0", 3), ("fake-other", "2.0", 4),
+                          ("fake-third", "3.0", 5)])
+
     def test_editable_installs_are_unpinned_not_option_lines(self):
         source = Source("requirements.txt", "-e ../fake-demo\n--editable=../fake-other\n")
         self.assertEqual([f.line for f in analyze(source)], [1, 2])
@@ -55,6 +69,21 @@ class DependencyTests(unittest.TestCase):
             "parent": {"version": "1.0.0", "dependencies": {"child": {"version": "2.0.0"}}},
         }}))
         self.assertEqual([d.name for d in pinned_dependencies(source)], ["parent", "child"])
+
+    def test_npm_lockfile_v3_ignores_links_and_handles_scoped_packages(self):
+        source = Source("package-lock.json", json.dumps({
+            "lockfileVersion": 3,
+            "packages": {
+                "": {"name": "fake-demo", "version": "1.0.0"},
+                "node_modules/@demo/fake": {"version": "1.2.3"},
+                "node_modules/fake-link": {"link": True, "resolved": "../fake-local"},
+                "node_modules/fake-range": {"version": "^2.0.0"},
+            },
+        }, indent=2))
+        dependencies = pinned_dependencies(source)
+        self.assertEqual([(d.ecosystem, d.name, d.version) for d in dependencies],
+                         [("npm", "@demo/fake", "1.2.3")])
+        self.assertGreater(dependencies[0].line, 1)
 
     def test_malformed_manifest_is_safe(self):
         for text in ("not json", "[]", '{"dependencies":null}', '{"packages":{"x":null}}'):

@@ -9,7 +9,7 @@ from ..models import Finding, Severity, Source
 
 PIN = re.compile(
     r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)(?:\[[^\]]+\])?\s*==\s*"
-    r"([A-Za-z0-9][A-Za-z0-9.!+_-]*)(?=\s|;|$)"
+    r"([A-Za-z0-9][A-Za-z0-9.!+_-]*)(?=\s*(?:;|--hash(?:=|\s)|\\?$))"
 )
 NPM_VERSION = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$")
 

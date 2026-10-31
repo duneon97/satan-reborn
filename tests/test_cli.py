@@ -1,3 +1,4 @@
+import ast
 import json
 import os
 import subprocess
@@ -36,9 +37,16 @@ class CLITests(unittest.TestCase):
         self.assertGreater(data["counts"]["WHISPER"], 0)
         self.assertEqual((self.root / "reports/demo.html").read_bytes(),
                          (self.root / "reports/last-report.html").read_bytes())
-        fake = "AKIA" + "EXAMPLEFAKE00000"
-        self.assertNotIn(fake, result.stdout + json.dumps(data))
-        self.assertNotIn(fake, (self.root / "reports/demo.html").read_text())
+        tree = ast.parse((PROJECT / "examples/haunted_app/app.py").read_text(encoding="utf-8"))
+        fake_values = [node.value.value for node in tree.body
+                       if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant)
+                       and isinstance(node.value.value, str)]
+        self.assertEqual(len(fake_values), 4)
+        outputs = result.stdout + result.stderr + json.dumps(data) + (
+            self.root / "reports/demo.html").read_text()
+        for fake in fake_values:
+            with self.subTest(credential=fake.split("=", 1)[0][:4]):
+                self.assertNotIn(fake, outputs)
 
     def test_clean_scan_exits_zero_and_creates_last_report(self):
         (self.target / "clean.py").write_text("print('boo')")

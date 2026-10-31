@@ -4,6 +4,10 @@ All credential-shaped values below are FAKE, nonfunctional placeholders.
 This file is scanned as text, never imported by SATAN Reborn.
 """
 
+# Fail closed if someone ignores the fixture warnings. The unsafe examples below
+# remain visible to static analysis, but this module must never become an app.
+raise SystemExit("FAKE scanner fixture only. Scan this folder; do not run or import it.")
+
 import hashlib
 import pickle
 import subprocess

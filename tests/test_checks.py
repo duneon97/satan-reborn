@@ -30,6 +30,20 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual([f.line for f in findings], [1, 3, 5])
         self.assertTrue(all(f.cwe == "CWE-489" for f in findings))
 
+    def test_debug_attributes_annotations_and_safe_negatives(self):
+        text = (
+            "config.DEBUG = True\n"
+            "app.config.DEBUG: bool = True\n"
+            "settings.debug = True\n"
+            "config.DEBUG = False\n"
+            "config.NOT_DEBUG = True\n"
+            "example = 'config.DEBUG = True'\n"
+            "# config.DEBUG = True\n"
+        )
+        findings = insecure_config.analyze(Source("config.py", text))
+        self.assertEqual([(f.rule_id, f.line) for f in findings],
+                         [("config.debug", 1), ("config.debug", 2), ("config.debug", 3)])
+
     def test_safe_config_and_comments(self):
         text = "# chmod 777 foo\n# curl https://example.invalid | sh\nDEBUG = False\n"
         self.assertEqual(insecure_config.analyze(Source("settings.py", text)), [])

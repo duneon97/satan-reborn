@@ -80,6 +80,10 @@ inclusion: always
   `<details>`/`<summary>` disclosures, focus outlines, high-contrast text,
   responsive layout, `prefers-reduced-motion` disables all animations and
   transitions.
+- Cursor/skull motion ends within four seconds even without reduced motion.
+  Preserve contextual disclosure names, first-finding severity anchors, focusable
+  table/skip target, mobile wrapping, forced-color borders, and independent
+  coverage-warning visibility. The score is never a coverage guarantee.
 - Print media query resets background/colours and shows hidden `details` content.
 - The report also exposes `<html lang="en">`, viewport meta, and
   `<meta name="color-scheme" content="dark">`.
@@ -162,3 +166,6 @@ is determined.
 - `test_report.py` and `test_server.py` verify escaping, atomic writes, and
   loopback behaviour.
 - Run the full suite and the haunted example scan after any meaningful change.
+- Hook tests validate the preserved `v1` / `PostFileSave` artifact structure,
+  matchers, and commands only. Do not infer live Kiro compatibility, registration,
+  or automatic execution, and do not invent Kiro chat/session evidence.

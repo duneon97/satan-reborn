@@ -11,7 +11,38 @@ scanner. It never executes or imports scanned code, installs dependencies, or
 probes services. Its browser report brings back black screens, red/green
 terminals, an ASCII skull, a blinking cursor, and a little haunted CRT flicker.
 
-## Setup
+## Features
+
+- **15 local rules** for credential patterns, unsafe configuration, risky Python
+  APIs, and unpinned Python requirements. Python checks use the AST, not execution.
+- **Private by design:** no source excerpts in findings, redacted credentials,
+  bounded traversal, and no network requests during default scans.
+- **A haunted report worth opening:** ASCII skull, CRT scanlines, severity jump
+  links, contextual fix disclosures, visible coverage warnings, and Soul Integrity.
+- **Portable outputs:** self-contained HTML, schema-versioned JSON, atomic writes,
+  CI exit codes, and an optional loopback-only viewer.
+- **Optional OSV advisories:** explicit `--osv` opt-in for exact PyPI/npm versions.
+  This is the only network feature, not required for the demo or tests.
+
+## Quickstart
+
+From the repository root, with **Python 3.10+**:
+
+```sh
+python3 -m satan_reborn scan examples/haunted_app \
+  --html reports/haunted.html --json reports/haunted.json
+# Expected exit code: 1 (findings detected, not a scanner failure).
+# Open reports/haunted.html directly in your browser.
+
+python3 -m unittest -v
+```
+
+No install, API key, account, or internet connection is needed. Do **not** install
+the haunted app's requirements. For a narrated walkthrough and submission text,
+see [the 3-minute demo script](docs/DEMO_SCRIPT.md) and
+[the Devpost draft](docs/DEVPOST.md).
+
+## Setup (optional virtual environment)
 
 Requires **Python 3.10+**. No pip packages, build step, JavaScript framework, or
 internet connection is needed. Run from this repository's root.
@@ -82,15 +113,17 @@ generic secret, and private-key header are clearly labeled **FAKE placeholders**
 They were not issued by a service and contain no usable credentials.
 Its `.invalid` domains are reserved, nonfunctional examples.
 
-### Screenshots
+### Screenshot
 
-> Screenshot placeholder: desktop overview with the ASCII skull, Soul Integrity,
-> four severity counters, and the findings table.
->
-> Screenshot placeholder: narrow-screen report with expanded “Exorcism / fix
-> advice” and masked secret evidence.
+![Haunted app audit: retro terminal and ASCII skull, exorcism-required verdict,
+Soul Integrity 0/100, 3 CRYPT, 13 HAUNT, 1 SPOOK, and 2 WHISPER findings,
+with masked evidence and fix advice.](docs/screenshots/report.png)
 
-Generate a fresh report with the demo command above to capture these screens.
+This is a browser capture of the generated offline demo report, not a mockup.
+To refresh it, run the demo command, open `reports/haunted.html`, use a desktop
+viewport (1440 × 1200), and save a browser screenshot to
+`docs/screenshots/report.png`. A browser is only needed to view or capture HTML,
+not to run the scanner or tests.
 
 ## What gets checked
 
@@ -99,7 +132,7 @@ Each check is its own plugin in `satan_reborn/checks/`.
 | Plugin | Signals | CWE |
 | --- | --- | --- |
 | `hardcoded_secrets.py` | AWS access-key IDs; classic/fine-grained GitHub tokens; private-key headers; high-entropy quoted credential assignments | CWE-798 |
-| `insecure_config.py` | Docker stages with no explicit nonroot USER or a final root USER; Flask/Django debug=True; chmod 777; curl piped to a shell; HTTP URLs in configuration | CWE-250, 489, 732, 494, 319 |
+| `insecure_config.py` | Docker stages with no explicit nonroot USER or a final root USER; Python DEBUG assignments (names, attributes, config keys) and debug=True calls; chmod 777; curl piped to a shell; HTTP URLs in configuration | CWE-250, 489, 732, 494, 319 |
 | `risky_code.py` | Python eval/exec; subprocess shell=True; pickle.load/loads; yaml.load without SafeLoader/CSafeLoader; password-related MD5/SHA1 calls | CWE-95, 78, 502, 916 |
 | `dependencies.py` | Unpinned entries in `requirements*.txt`; extracts exact PyPI/npm versions for opt-in OSV | CWE-1104, 1395 |
 
@@ -124,6 +157,10 @@ demo heuristic, not a calibrated risk model. An empty folder scores 100.
 The report provides readable severity labels as well as colors, keyboard-native
 fix disclosures, semantic tables, a skip link, high-contrast text, responsive
 layout, and `prefers-reduced-motion` rules that disable all animations.
+Decorative motion stops within four seconds even without reduced motion.
+Severity cards jump to the first matching finding, scrollable tables accept
+keyboard focus, and print styles reveal fix advice. Coverage warnings remain
+visible even when the score is 100; no findings is not a clean bill of health.
 It contains no JavaScript, external assets, fonts, analytics, or trackers.
 
 ## Optional OSV advisory lookups
@@ -179,9 +216,10 @@ test. Review every finding in context.
   share them carefully. Treat the folder being scanned as a stable local tree;
   this is not an OS sandbox against concurrent malicious filesystem mutations.
 
-## How Kiro is used
+## How Kiro was used
 
-The repository includes a **Kiro-ready, spec-driven workflow**, not just a prompt:
+The checked-in `.kiro/` artifacts capture the project's **spec-driven Kiro
+workflow**. They remain inspectable alongside the implementation:
 
 1. `.kiro/specs/satan-reborn/requirements.md` defines EARS acceptance requirements
    tied to user stories.
@@ -190,16 +228,27 @@ The repository includes a **Kiro-ready, spec-driven workflow**, not just a promp
 3. `tasks.md` maps checked implementation tasks to code, documentation, and tests.
 4. `.kiro/steering/{product,tech,structure}.md` gives Kiro persistent project
    context: resurrection scope, stdlib-only constraints, privacy, and layout.
-5. `.kiro/hooks/test-on-save.json` runs `python -m unittest -v` after a Python save.
-   `rescan-example-on-save.json` regenerates the local demo after relevant saves.
+5. `.kiro/hooks/test-on-save.json` defines `python -m unittest -v` after a Python save.
+   `rescan-example-on-save.json` defines local demo regeneration after relevant saves.
    Its command accepts the demo's expected exit `1`, but propagates operational
    failures. Neither hook runs the vulnerable app or enables OSV.
 
-Open this folder in Kiro and use the spec/checklist to guide changes. Hooks use
-the standalone `.kiro/hooks/*.json` v1 schema (`PostFileSave`), supported by Kiro
-IDE 1.0 / CLI V3. Commands execute from the project root; ensure `python` selects
-Python 3.10+ in Kiro's environment. The hook definitions and steering files are
-committed project artifacts, not claims of a recorded Kiro execution session.
+**Vibe coding, with guardrails:** natural-language requests describe the feel
+("a haunted 1995 terminal, but readable and usable with a keyboard") and the
+behavior. Specs turn that intent into acceptance criteria; steering constrains
+the code; small implementation/test loops check the result. This finishing pass
+reconciled the checklist against the code, fixed missed debug-attribute detection
+and exact-pin parsing, and added report accessibility regressions rather than
+treating generated code or checked boxes as proof.
+
+Open this folder in Kiro and use the spec/checklist to guide changes. The
+preserved hook files contain `v1` / `PostFileSave` command definitions. Tests
+validate their checked-in structure, matchers, and offline-safe commands, not
+their registration in a live Kiro installation. Check hook activation and schema
+support in your Kiro version; the same commands can always be run manually from
+the project root. Ensure `python` selects Python 3.10+. These artifacts are
+evidence of workflow design, not a recorded Kiro chat or proof of automatic hook
+execution. No such recording is bundled or claimed.
 
 ## Development
 
@@ -214,7 +263,8 @@ satan_reborn/
   server.py            loopback-only last-report viewer
 examples/haunted_app/   fake, deliberately unsafe fixtures
 tests/                 unittest checks, CLI, server, OSV, HTML, and privacy tests
-.kiro/                 specs, steering, and two automatic hooks
+.kiro/                 specs, steering, and two save-hook definitions
+docs/                  demo script, Devpost draft, real report screenshot
 ```
 
 To add a plugin, implement `analyze(source: Source) -> list[Finding]`, register it
@@ -224,4 +274,5 @@ shipping. All tests in this new project are included in `tests/`.
 
 ## License
 
-MIT. Copyright © 2026 Minh Tuan Le.
+[MIT](LICENSE). Copyright © 2026 Minh Tuan Le. This is a new implementation
+inspired by SATAN's browser-report idea, not a redistribution of the 1995 tool.

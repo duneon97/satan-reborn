@@ -108,6 +108,9 @@ cloud access.
   THE SYSTEM SHALL report WHISPER with rule `deps.unpinned` (CWE-1104).
 - WHEN `pinned_dependencies()` extracts a PyPI pin, THE SYSTEM SHALL normalise the
   package name (consecutive `[-_.]` → `-`, lowercased) per PEP 503.
+- WHEN an apparent PyPI pin has trailing constraints or arbitrary text instead
+  of an environment marker, hash option, continuation, or end of line,
+  THE SYSTEM SHALL NOT treat it as an exact pin or query it via OSV.
 - WHEN `pinned_dependencies()` parses npm manifests, THE SYSTEM SHALL handle
   `package.json` (dependencies/devDependencies/optionalDependencies sections) and
   `package-lock.json` v1 (nested `dependencies` tree) and v2/v3 (`packages` map
@@ -149,11 +152,23 @@ cloud access.
 - WHEN rendering HTML, THE SYSTEM SHALL produce one self-contained file with a
   black/red/green retro interface, ASCII skull, CRT scanlines, flicker animation,
   and blinking cursor, using inline CSS only (no `<script>`, no external resources).
+- WHEN rendering decorative motion, THE SYSTEM SHALL stop it within four seconds,
+  even if reduced motion is not requested.
 - WHILE reduced motion is preferred (`prefers-reduced-motion: reduce`),
   THE SYSTEM SHALL disable all CSS animations and transitions.
 - WHEN using keyboard navigation or narrow screens, THE SYSTEM SHALL provide a
   skip link, semantic table headers with `scope="col"`, native `<details>`/`<summary>`
   for fix advice disclosures, visible focus outlines, and responsive layout.
+- WHEN a severity counter is activated, THE SYSTEM SHALL jump to the first finding
+  of that severity, or to the findings section if that count is zero.
+- WHEN rendering fix disclosures, THE SYSTEM SHALL include the finding title and
+  location in each disclosure's accessible name.
+- WHEN coverage warnings exist, THE SYSTEM SHALL show a prominent link to field
+  notes independently of score or critical/high findings.
+- WHEN using a narrow viewport, THE SYSTEM SHALL contain table overflow in a
+  keyboard-focusable scroll region rather than overflow the page.
+- WHEN printing a report, THE SYSTEM SHALL reveal fix advice. WHILE forced
+  colors are active, THE SYSTEM SHALL preserve focus outlines and visible borders.
 - WHEN writing atomic output, THE SYSTEM SHALL use `tempfile.mkstemp` in the
   destination directory, write content, then `os.replace`; on any failure,
   THE SYSTEM SHALL unlink the temporary file and not leave it behind.
@@ -192,11 +207,22 @@ spec-driven workflow.
   `config.docker-root`, `config.chmod`, `config.curl-shell`, `config.debug`,
   `config.http`, `code.dynamic-execution`, `code.shell`, `code.pickle`,
   `code.yaml`, `code.password-hash`, `deps.unpinned`.
-- WHEN a Python file is saved in Kiro, THE SYSTEM SHALL run `python -m unittest -v`
-  via the `test-on-save.json` hook.
-- WHEN a file under `satan_reborn/` or `examples/haunted_app/` is saved in Kiro,
-  THE SYSTEM SHALL regenerate the haunted-app report without executing the fixture
-  and without passing `--osv`, via the `rescan-example-on-save.json` hook.
+- THE REPOSITORY SHALL preserve `test-on-save.json`, defining
+  `python -m unittest -v` after a Python save, and `rescan-example-on-save.json`,
+  defining offline demo regeneration after saves under `satan_reborn/` or
+  `examples/haunted_app/`. The rescan command SHALL NOT execute the fixture or
+  pass `--osv`, and SHALL accept exit 1 without hiding operational errors.
+- WHEN documenting hooks, THE REPOSITORY SHALL distinguish tested file structure
+  and commands from live Kiro schema support, registration, and event execution.
+  The supplied `v1` / `PostFileSave` definitions are preserved; automatic
+  execution is not established by unit tests.
+- WHEN the haunted fixture is accidentally invoked or imported, its first
+  executable statement after the module docstring SHALL stop execution before
+  imports or unsafe examples. Scanner tests SHALL inspect this guard as AST,
+  not execute the fixture.
 - THE SYSTEM SHALL include setup, demo, CI, and privacy documentation, screenshot
-  placeholders, and an MIT license; `.kiro` specs/steering/hooks SHALL be
-  committed project artifacts.
+  `docs/screenshots/report.png` captured from a real generated report, an MIT
+  license, a timestamped three-minute `docs/DEMO_SCRIPT.md`, and a
+  `docs/DEVPOST.md` submission draft. Kiro documentation SHALL cover specs,
+  steering, hooks, and vibe coding without inventing recorded sessions.
+  `.kiro` specs/steering/hooks SHALL remain version-controlled project artifacts.

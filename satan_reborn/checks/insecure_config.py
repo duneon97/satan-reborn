@@ -58,6 +58,7 @@ def analyze(source: Source) -> list[Finding]:
                     if isinstance(node.value, ast.Constant) and node.value.value is True:
                         if any(
                             (isinstance(t, ast.Name) and t.id.upper() == "DEBUG")
+                            or (isinstance(t, ast.Attribute) and t.attr.upper() == "DEBUG")
                             or (isinstance(t, ast.Subscript) and isinstance(t.slice, ast.Constant)
                                 and t.slice.value == "DEBUG")
                             for t in targets

@@ -1,6 +1,8 @@
 # Implementation tasks
 
-All tasks are complete. The implementation is fully shipped and tested.
+Checked tasks below have code or repository artifacts and local validation.
+This is an implementation checklist, not a claim of a published release,
+recorded Kiro session, or verified live Kiro hook activation.
 
 ## Core infrastructure
 
@@ -26,7 +28,8 @@ All tasks are complete. The implementation is fully shipped and tested.
   `evidence = "[REDACTED]"` on all findings.
 - [x] **R3** Implement `insecure_config.analyze()`: per-stage Docker FROM/USER
   tracking with reset on new stage (HAUNT / `config.docker-root` / CWE-250);
-  AST detection of `DEBUG = True`, `config["DEBUG"] = True`, and `debug=True`
+  AST detection of `DEBUG = True`, `config.DEBUG = True` (including annotated
+  attributes), `config["DEBUG"] = True`, and `debug=True`
   keyword calls (HAUNT / `config.debug` / CWE-489); text patterns for
   `chmod 777` (HAUNT / CWE-732), `curl|shell` (HAUNT / CWE-494), and HTTP URLs
   in config-format files (SPOOK / CWE-319).
@@ -41,6 +44,8 @@ All tasks are complete. The implementation is fully shipped and tested.
   `NPM_VERSION` regex for exact semver; `package.json` (three dependency sections)
   and `package-lock.json` v1/v2/v3 handling; `key_line()` for JSON source
   location; unpinned lines flagged as WHISPER / `deps.unpinned` / CWE-1104.
+- [x] **R5** Reject apparent exact pins with trailing constraints/arbitrary
+  text; retain environment markers, hashes, and backslash continuations.
 
 ## OSV integration
 
@@ -64,6 +69,11 @@ All tasks are complete. The implementation is fully shipped and tested.
   `<meter>`; warnings `<aside>`; responsive layout; `prefers-reduced-motion` and
   print media rules; accessibility: skip link, `<html lang="en">`, `scope="col"`,
   viewport and color-scheme meta, focus outlines.
+- [x] **R6** Polish triage guidance, blocker score treatment, and independent
+  coverage-warning banner; severity cards jump to the first matching finding.
+  Add contextual accessible disclosure names, focusable skip target and table
+  region, mobile navigation wrapping, forced-color borders, finite ≤4-second
+  decorative motion, and print disclosure visibility.
 - [x] **R6** Implement `write_text_atomic()`: `tempfile.mkstemp` in destination
   directory, write via `os.fdopen`, `os.replace`; unlink temp on any failure.
   Implement `write_json()`: `json.dumps(indent=2, ensure_ascii=True) + "\n"`.
@@ -88,8 +98,17 @@ All tasks are complete. The implementation is fully shipped and tested.
   fixtures using only clearly labeled FAKE placeholder credentials and
   `.invalid` reserved domains: `app.py`, `requirements.txt`, `package.json`,
   `settings.env`, `Dockerfile`. The fixture exercises all 15 local rule IDs.
+  Add a fixture README and fail-closed `SystemExit` before imports or unsafe
+  calls; verify fake values and all four severities without running the app.
 - [x] **R8** Add README with setup, run, demo, CI, OSV, privacy/boundaries, and
-  Kiro usage sections; screenshot placeholders; MIT license (`LICENSE`).
+  truthful Kiro specs/steering/hooks/vibe-coding sections; MIT license (`LICENSE`).
+- [x] **R8** Capture a real generated report at `docs/screenshots/report.png`
+  and embed it in README with descriptive alt text.
+- [x] **R8** Write `docs/DEMO_SCRIPT.md` with three-minute narration, timestamped
+  shot list, safe preflight, and expected exit-code handling.
+- [x] **R8** Write `docs/DEVPOST.md` with tagline, Inspiration, What it does,
+  How we built it (including Kiro), Challenges, Accomplishments, What we learned,
+  What's next (future only), and Built with tags.
 - [x] **R8** Add `.gitignore` covering `reports/` and `.venv/`.
 
 ## Tests
@@ -97,25 +116,34 @@ All tasks are complete. The implementation is fully shipped and tested.
 - [x] **R1–R8** Add `tests/test_secrets.py`: all four secret rule IDs, masking,
   entropy threshold, specific-token/entropy deduplication, safe negatives.
 - [x] **R1–R8** Add `tests/test_checks.py`: all `insecure_config` and `risky_code`
-  rules, alias resolution, multiline calls, safe/comment negatives.
+  rules, debug attributes/annotations, alias resolution, multiline calls,
+  safe/comment negatives.
 - [x] **R1–R8** Add `tests/test_dependencies.py`: PyPI/npm pinning, name
-  normalisation, editable installs, lockfile v1/v2/v3, malformed JSON.
+  normalisation, strict pin suffixes, editable installs, dedicated lockfile
+  v1/v2/v3 cases, malformed JSON.
 - [x] **R1–R8** Add `tests/test_scanner.py`: traversal exclusions, binary/symlink/
   FIFO/oversized handling, OSV opt-in mock, findings sort order, JSON redaction
   invariant; `ModelTests` for `soul_integrity`, `has_blockers`, `to_dict()` shape.
 - [x] **R1–R8** Add `tests/test_cli.py`: all exit codes via subprocess, both
-  report exports, duplicate-path rejection, terminal control-character escaping,
+  report exports, all four demo credential values absent from terminal/JSON/HTML,
+  duplicate-path rejection, terminal control-character escaping,
   `--help`/`--version`.
 - [x] **R1–R8** Add `tests/test_osv.py`: payload shape/caching, severity mapping,
   offline/budget/withdrawn/bad-response/IncompleteRead paths; no network access.
 - [x] **R1–R8** Add `tests/test_report.py`: HTML escaping/no-script audit, atomic
-  write, failed-write cleanup (no leftover temp file), JSON roundtrip.
+  write, failed-write cleanup (no leftover temp file), JSON roundtrip; severity
+  jump links, resolved/unique anchors, contextual disclosures, triage/coverage
+  independence, finite/reduced motion, forced colors, and print-style regression.
 - [x] **R1–R8** Add `tests/test_server.py`: real loopback HTTP; 200/404/204
   routing; security headers; loopback bind assertion; report refresh.
-- [x] **R1–R8** Add `tests/test_project.py`: AST parseability of all `.py` files;
+- [x] **R1–R8** Add `tests/test_project.py`: Python 3.10 AST parseability of
+  package/test `.py` files; fixture guard and fake-label/URL checks;
   hook schema validation (v1, two PostFileSave hooks, no `--osv`, matcher coverage
   across OS path separators); demo covers every local rule_id; all findings have
   advice, valid CWE, and line ≥ 1.
+- [x] **R8** Test the actual rescan command in isolated temporary folders:
+  expected demo exit 1 maps to hook success; missing fixture stays exit 2.
+  Verify submission docs and the screenshot's PNG header/dimensions.
 
 ## Kiro hooks and steering
 
@@ -128,3 +156,22 @@ All tasks are complete. The implementation is fully shipped and tested.
   `inclusion: always` and complete project context.
 - [x] **R8** Add `.kiro/specs/satan-reborn/requirements.md`, `design.md`,
   `tasks.md` as the spec-driven workflow artifacts.
+
+## Validation boundaries
+
+- Finishing-pass validation: `python3 -m unittest -v` passes **80 tests** on
+  Python 3.13.5 (including Python 3.10 grammar checks, not a separate 3.10
+  interpreter run). The offline demo yields 19 findings across all 15 rules,
+  counts 3/13/1/2, and expected exit 1.
+- Chromium checks confirm keyboard disclosure activation, reduced-motion
+  disabling, 320px page width with contained table scrolling, and printed fix
+  advice from initially closed disclosures. The desktop axe audit reports zero
+  violations; its remaining incomplete contrast check concerns two decorative,
+  `aria-hidden` glyphs. This is not full accessibility certification.
+- Hook checkboxes mean the preserved definitions exist and their structure,
+  matchers, and safe commands are tested. Live Kiro registration and save-event
+  execution are not verified here; no specific IDE/CLI schema compatibility is
+  claimed.
+- Browser checks cover the generated report, not a claim of exhaustive WCAG
+  certification or all-browser/assistive-technology support.
+- OSV tests use mocks; no live advisory request is needed or claimed.

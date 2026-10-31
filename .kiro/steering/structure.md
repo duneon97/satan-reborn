@@ -72,10 +72,12 @@ examples/haunted_app/  Deliberately unsafe text fixtures — DO NOT run, build, 
                        with Loader, hashlib.md5/sha1 in password funcs, DEBUG=True,
                        app.run(debug=True), and clearly labeled FAKE credential-shaped
                        strings (AWS, GitHub, private-key header, high-entropy assignment).
-  requirements.txt     Unpinned Flask + requests; exact-pinned demo package for OSV.
+                       Stops before imports with SystemExit if accidentally invoked.
+  requirements.txt     Unpinned Flask + PyYAML; exact-pinned requests metadata for OSV.
   package.json         Exact npm versions for OSV demo.
-  settings.env         FAKE AWS and GitHub credential-shaped placeholders; HTTP URL.
+  settings.env         Plaintext HTTP URL using a reserved .invalid domain.
   Dockerfile           Root-user stage; curl|sh; chmod 777; no USER instruction.
+  README.md            Text-only safety warnings and map of fixtures to local rules.
 
 tests/
   __init__.py          Marks tests as a package; re-exports nothing.
@@ -107,6 +109,11 @@ tests/
 
 reports/               Runtime output directory (git-ignored).
   last-report.html     Always written by scan; replaced atomically.
+
+docs/
+  DEMO_SCRIPT.md       Three-minute narration, timestamped shots, safe local preflight.
+  DEVPOST.md           Truthful submission draft with future ideas clearly separated.
+  screenshots/report.png  Real browser capture of generated haunted demo HTML.
 ```
 
 ## Navigation rules

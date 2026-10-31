@@ -31,7 +31,10 @@ color:var(--white);font:14px/1.65 "Courier New",Courier,monospace}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.12;
 background:repeating-linear-gradient(0deg,transparent 0 3px,#000 3px 4px)}
 ::selection{background:var(--green);color:#080c0a}a{color:var(--green);text-underline-offset:4px}
-a:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:5px}
+:focus-visible{outline:3px solid var(--amber);outline-offset:5px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+clip-path:inset(50%);white-space:nowrap;border:0}
+:target{scroll-margin-top:20px}
 .skip{position:absolute;left:12px;top:-80px;background:var(--green);color:#000;padding:8px;z-index:9}
 .skip:focus{top:8px}.wrap{max-width:1240px;margin:auto;padding:0 36px}
 .masthead{border-bottom:1px solid var(--line);background:#0c110e}
@@ -44,22 +47,30 @@ width:7px;height:7px;background:var(--green);margin-right:7px;box-shadow:0 0 9px
 .eyebrow{font-size:11px;letter-spacing:2px;color:var(--red);margin:0 0 14px;text-transform:uppercase}
 h1{font-size:clamp(48px,8vw,98px);line-height:.95;letter-spacing:-6px;margin:0;font-weight:900}
 h1 span{display:block;color:var(--green);font-size:.49em;letter-spacing:12px;margin-top:14px}
-.cursor{color:var(--red);animation:blink 1.2s steps(1,end) infinite}
+.cursor{color:var(--red);animation:blink 1s steps(1,end) 4}
 .lede{max-width:640px;color:var(--muted);font-size:13px;margin-top:25px}
 .tag{display:inline-block;border:1px solid var(--line);font-size:10px;padding:3px 8px;
 color:var(--green);letter-spacing:1px;margin:3px 4px 0 0}
 .skull{margin:0;text-align:center;color:var(--green);font-size:15px;line-height:1.2;
-text-shadow:0 0 18px #8bffad35;animation:flicker 9s linear infinite}
+text-shadow:0 0 18px #8bffad35;animation:flicker 4s linear 1}
 .session{border:1px solid var(--line);background:var(--panel);margin-bottom:24px}
 .bar{padding:8px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
 gap:12px;font-size:11px;color:var(--muted);background:#131d16;letter-spacing:1px}
 .lights{color:var(--red);letter-spacing:5px}.session-body{padding:18px 22px;display:grid;
-grid-template-columns:1fr 1fr;gap:8px 30px;font-size:12px}.label{color:var(--muted)}
+grid-template-columns:1fr 1fr;gap:8px 30px;font-size:12px}.session-body>div{min-width:0}
+.label{color:var(--muted)}
 .value{overflow-wrap:anywhere}.prompt{color:var(--green)}
+.triage{display:flex;align-items:center;justify-content:space-between;gap:18px;
+border-left:3px solid var(--red);background:var(--panel);padding:15px 20px;margin-bottom:24px}
+.triage p{margin:0}.triage strong{color:var(--red)}.triage.clear-status{border-color:var(--green)}
+.triage.clear-status strong{color:var(--green)}.triage .small{margin-top:4px}
+.coverage{border-left:3px solid var(--amber);padding:12px 18px;background:var(--panel);
+color:var(--amber);font-size:12px;margin:0 0 24px}
 .dashboard{display:grid;grid-template-columns:1.25fr 2fr;gap:22px;margin:0 0 38px}
 .integrity{border:1px solid var(--line);padding:22px;background:var(--panel)}
 .section-kicker{color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0}
 .score{font-size:58px;line-height:1.1;font-weight:bold;color:var(--green);margin:10px 0}
+.integrity.compromised .score{color:var(--red)}
 .score small{font-size:16px;font-weight:normal;color:var(--muted)}
 meter{width:100%;height:12px;accent-color:var(--green)}
 meter::-webkit-meter-bar{background:#243429;border:0;border-radius:0}
@@ -73,6 +84,7 @@ meter::-webkit-meter-optimum-value{background:var(--green)}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 0 16px}
 h2{font-size:19px;letter-spacing:1px;margin:0}h2 .index{color:var(--red);font-size:12px;margin-right:10px}
 .small{font-size:11px;color:var(--muted)}.table-wrap{overflow:auto;border:1px solid var(--line)}
+.table-wrap:focus-visible{outline-offset:3px}
 table{width:100%;border-collapse:collapse;text-align:left;min-width:760px}
 caption{text-align:left;padding:12px 16px;background:var(--panel);font-size:11px;color:var(--muted)}
 th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);
@@ -89,6 +101,7 @@ details{margin-top:10px}summary{color:var(--green);cursor:pointer;width:fit-cont
 .clear{padding:34px;color:var(--green);text-align:center;border:1px solid var(--line)}
 .notes{margin:32px 0;border:1px solid var(--line);padding:20px 24px;background:var(--panel)}
 .notes h2{font-size:14px;color:var(--amber)}.notes ul{font-size:12px;color:var(--muted);padding-left:20px}
+.notes li,.advice{overflow-wrap:anywhere}
 .about{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin:40px 0}
 .about h3{font-size:12px;color:var(--green);letter-spacing:1px}.about p{font-size:12px;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding:22px 0 30px;font-size:10px;color:var(--muted)}
@@ -101,12 +114,21 @@ transition:none!important;scroll-behavior:auto!important}}
 .masthead .status{display:none}.count{padding:16px}.session-body{grid-template-columns:1fr}
 .about{grid-template-columns:1fr;gap:10px}footer .wrap{flex-direction:column;gap:5px}}
 @media(max-width:480px){.hero{grid-template-columns:1fr}.skull{display:none}.hero{padding-top:35px}
-nav{gap:14px}.brand{font-size:12px;letter-spacing:1px}.count{padding:12px 8px}
+.masthead .wrap{flex-wrap:wrap;gap:10px;padding-top:14px;padding-bottom:14px}
+nav{gap:18px;width:100%}.brand{font-size:12px;letter-spacing:1px}.count{padding:12px 8px}
+.bar,.section-head,.triage{flex-wrap:wrap}.triage{padding:12px}
 .count strong{font-size:30px}.count .badge{font-size:9px;padding:2px 4px}.bar{font-size:9px}}
+@media(forced-colors:active){body:before{display:none}.badge,.tag,.count,.integrity,
+.session,.triage,.coverage{border:1px solid CanvasText}a,summary{color:LinkText}
+:focus-visible{outline-color:Highlight}}
 @media print{body{background:#fff;color:#000}body:before,.skull,.cursor,nav{display:none}
 *{animation:none!important;text-shadow:none!important;color:#000!important}
+.masthead,.session,.bar,.integrity,.counts,.triage,.coverage,caption,th{background:#fff}
 .wrap{max-width:none;padding:0}.hero{padding:15px 0}.dashboard{margin-bottom:15px}
-details>p{display:block!important}table{min-width:0}td,th{padding:8px}a{text-decoration:none}}
+.table-wrap{overflow:visible}details::details-content{content-visibility:visible;height:auto}
+details>p{display:block!important}table{min-width:0;table-layout:fixed}
+thead{display:table-header-group}tr{break-inside:avoid}td,th{padding:8px;overflow-wrap:anywhere}
+.location{min-width:0}a{text-decoration:none}}
 """
 
 CSP = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
@@ -115,9 +137,13 @@ CSP = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-acti
 def render_html(report: Report) -> str:
     e = escape
     counts = report.counts
+    first_findings = {}
+    for number, finding in enumerate(report.findings, 1):
+        first_findings.setdefault(finding.severity, f"finding-{number}")
     cards = "".join(
-        f'<a class="count {s.value.lower()}" href="#findings" '
-        f'aria-label="{counts[s.value]} {s.value}, {s.standard} findings">'
+        f'<a class="count {s.value.lower()}" href="#{first_findings.get(s, "findings")}" '
+        f'aria-label="{counts[s.value]} {s.value}, {s.standard} findings. '
+        f'Jump to {"first finding" if counts[s.value] else "findings section"}.">'
         f'<span class="badge">{s.value}</span><strong>{counts[s.value]:02d}</strong>'
         f'<span class="standard">{s.standard}</span></a>'
         for s in Severity
@@ -131,7 +157,8 @@ def render_html(report: Report) -> str:
             f'{finding.severity.value}</span><span class="rule">{finding.severity.standard}</span></td>'
             f'<td><span class="finding-title">{e(finding.title)}</span>{masked}'
             f'<span class="rule">{e(finding.rule_id)} / {e(finding.cwe)}</span>'
-            f'<details><summary>Exorcism / fix advice</summary>'
+            f'<details><summary>Exorcism / fix advice<span class="sr-only">'
+            f' for {e(finding.title)} at {e(location)}</span></summary>'
             f'<p class="advice">{e(finding.advice)}</p></details></td>'
             f'<td class="location"><a href="#finding-{number}" '
             f'aria-label="{e(location, quote=True)}">{e(location)}</a></td></tr>'
@@ -147,11 +174,21 @@ def render_html(report: Report) -> str:
     if report.warnings:
         warning_html = (
             '<aside class="notes" aria-labelledby="warning-heading">'
-            '<h2 id="warning-heading">Scanner field notes / coverage warnings</h2><ul>'
+            '<h2 id="warning-heading" tabindex="-1">Scanner field notes / coverage warnings</h2><ul>'
             + "".join(f"<li>{e(w)}</li>" for w in report.warnings) + "</ul></aside>"
         )
     verdict = "EXORCISM REQUIRED" if report.has_blockers else "NO HIGH-SEVERITY SIGNALS"
     network = "OSV OPT-IN" if report.osv_enabled else "OFFLINE / NO NETWORK"
+    blockers = counts[Severity.CRYPT.value] + counts[Severity.HAUNT.value]
+    triage_note = (
+        f"{blockers} critical/high finding(s). Start with CRYPT, then HAUNT."
+        if blockers else "Review lower-severity findings and coverage before drawing conclusions."
+    )
+    coverage_html = (
+        f'<p class="coverage"><strong>COVERAGE NEEDS REVIEW</strong> / '
+        f'{len(report.warnings)} warning(s). <a href="#warning-heading">Read scanner field notes</a>.</p>'
+        if report.warnings else ""
+    )
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -167,7 +204,7 @@ def render_html(report: Report) -> str:
 <header class="masthead"><div class="wrap">
   <div class="brand">SATAN<b>://</b>REBORN</div>
   <nav aria-label="Report sections"><a href="#overview">Overview</a><a href="#findings">Findings</a><a href="#about">Readme</a></nav>
-  <span class="status"><span class="dot" aria-hidden="true"></span>LOCAL SYSTEM ONLINE</span>
+  <span class="status"><span class="dot" aria-hidden="true"></span>LOCAL REPORT / SCAN COMPLETE</span>
 </div></header>
 <main class="wrap" id="overview">
   <section class="hero" aria-labelledby="report-title">
@@ -187,14 +224,19 @@ def render_html(report: Report) -> str:
       <div><span class="label">Verdict </span><strong class="{'red' if report.has_blockers else 'prompt'}">{verdict}</strong></div>
     </div>
   </section>
+  <aside class="triage{' clear-status' if not report.has_blockers else ''}" aria-label="Triage guidance">
+    <div><p><strong>{verdict}</strong></p><p class="small">{triage_note}</p></div>
+    <a href="#findings">Inspect findings <span aria-hidden="true">↓</span></a>
+  </aside>
+  {coverage_html}
   <section class="dashboard" aria-label="Audit summary">
-    <div class="integrity"><p class="section-kicker">Soul Integrity</p>
+    <div class="integrity{' compromised' if report.has_blockers else ''}"><p class="section-kicker">Soul Integrity</p>
       <p class="score">{report.soul_integrity}<small> / 100</small></p>
-      <meter min="0" max="100" value="{report.soul_integrity}" aria-label="Soul Integrity">{report.soul_integrity} out of 100</meter>
+      <meter min="0" max="100" low="40" high="80" optimum="100" value="{report.soul_integrity}" aria-label="Soul Integrity">{report.soul_integrity} out of 100</meter>
       <p class="score-note">A heuristic, not a security guarantee.</p>
     </div><div class="counts">{cards}</div>
   </section>
-  <section id="findings" aria-labelledby="findings-heading">
+  <section id="findings" tabindex="-1" aria-labelledby="findings-heading">
     <div class="section-head"><h2 id="findings-heading"><span class="index">01 /</span>The haunting</h2>
     <span class="small">{len(report.findings)} findings recovered</span></div>
     {findings_html}

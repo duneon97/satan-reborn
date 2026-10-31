@@ -106,7 +106,7 @@ the final user for a stage is `None`, `root`, `0`, `00`, or `000` (with optional
 named `Dockerfile*` or `*.dockerfile`. Base-image USER inheritance is not resolved.
 
 **Debug mode**: `ast.parse` the `.py`/`.pyw` source. Walk for:
-- `ast.Assign`/`ast.AnnAssign` where target is `DEBUG` (Name or subscript key) and
+- `ast.Assign`/`ast.AnnAssign` where target is `DEBUG` (Name, Attribute, or subscript key) and
   value is `True` → HAUNT / `config.debug` / CWE-489
 - `ast.Call` keyword with `arg == "debug"` and value `True` → HAUNT / `config.debug` / CWE-489
 
@@ -144,6 +144,9 @@ lines, and includes editable installs (treated as unpinned).
 
 `PIN` regex matches exact `name==version` pins (with optional extras and environment
 markers). PyPI names are normalised via `re.sub(r"[-_.]+", "-", name).lower()`.
+Trailing extra constraints or arbitrary text are not accepted as an exact pin.
+Whitespace followed by a marker, `--hash` option, continuation, or end of line
+is permitted.
 
 `NPM_VERSION` matches semver `X.Y.Z[-prerelease][+build]` only (no ranges, no `^`,
 no `~`). `package.json` reads `dependencies`, `devDependencies`, and
@@ -201,10 +204,43 @@ warnings aside, about section, footer.
 
 Findings table: `<table>` with `<caption>`, `<thead>` with `scope="col"` headers,
 `<tbody>` rows. Fix advice uses native `<details>`/`<summary>` — no JavaScript.
-Skip link (`<a class="skip" href="#findings">`) enables keyboard navigation.
+Skip link (`<a class="skip" href="#findings">`) enables keyboard navigation;
+the target section has `tabindex="-1"`. The table's named scroll region has
+`tabindex="0"` and visible focus styling. Narrow layouts wrap navigation and
+metadata without overflowing the page. Each summary includes screen-reader-only
+finding title/location context. Severity cards link to the first matching row,
+or the findings section for zero counts.
+
+A triage aside prioritizes critical/high findings. A separate coverage banner
+links to warning notes even when Soul Integrity is 100. Critical/high reports
+use a red score treatment. The meter has low/high/optimum semantics; the score
+remains explicitly a heuristic.
+
+Cursor blink and skull flicker each stop within four seconds.
 `prefers-reduced-motion: reduce` sets `animation: none !important` on all elements.
 Print media query resets backgrounds, removes decorative elements, and forces
-`<details>` content visible.
+`<details>` content visible, including the `::details-content` content-visibility
+used by current browsers. Forced-colors styling retains borders and focus.
+
+## Demo and submission artifacts
+
+The fixture retains all deliberate security signals, using only clearly labeled
+FAKE credential-shaped values and reserved `.invalid` domains. `app.py` raises
+`SystemExit` immediately after its docstring and safety comment, before imports.
+This prevents accidental invocation from reaching the examples; scanner/tests
+still parse it as text. Its local README maps files to all 15 rules and warns
+against installation, deployment, import, and container builds.
+
+`docs/screenshots/report.png` is a real desktop browser capture of the generated
+demo report. `docs/DEMO_SCRIPT.md` contains a 0:00–3:00 shot list, narration,
+preflight commands, and expected exit-code handling. `docs/DEVPOST.md` describes
+only implemented behavior and separates future ideas.
+
+The existing `.kiro/hooks/*.json` definitions are preserved. Tests validate their
+file structure, matchers, offline-safe commands, and expected-exit handling.
+They do not validate a live Kiro installation's schema, registration, or automatic
+event handling. Documentation must not claim that the artifact files are a
+recorded Kiro session or verified automatic execution.
 
 ## Error policy and testing
 
